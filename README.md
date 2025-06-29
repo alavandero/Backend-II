@@ -46,8 +46,8 @@ Implementación completa de un sistema de autenticación y autorización con JWT
 
 1. **Clonar el repositorio**
 ```bash
-git clone <repository-url>
-cd BackEnd-II
+git clone https://github.com/alavandero/Backend-II.git
+cd Backend-II
 ```
 
 2. **Instalar dependencias**
@@ -71,56 +71,17 @@ El servidor estará disponible en `http://localhost:8080`
 ## Endpoints de la API
 
 ### Sesiones (`/api/sessions`)
-
-#### POST `/api/sessions/register`
-Registra un nuevo usuario.
-
-**Body:**
-```json
-{
-  "first_name": "John",
-  "last_name": "Doe",
-  "email": "john@example.com",
-  "age": 25,
-  "password": "password123"
-}
-```
-
-#### POST `/api/sessions/login`
-Inicia sesión con un usuario existente.
-
-**Body:**
-```json
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-
-#### GET `/api/sessions/current`
-Obtiene los datos del usuario actualmente autenticado.
-
-**Headers:** Requiere cookie `access_token`
-
-#### POST `/api/sessions/logout`
-Cierra la sesión del usuario.
+- **POST** `/register` - Registra un nuevo usuario
+- **POST** `/login` - Inicia sesión con un usuario existente
+- **GET** `/current` - Obtiene los datos del usuario actualmente autenticado
+- **POST** `/logout` - Cierra la sesión del usuario
 
 ### Usuarios (`/api/users`)
-
-#### GET `/api/users`
-Obtiene todos los usuarios (requiere autenticación).
-
-#### GET `/api/users/:id`
-Obtiene un usuario específico por ID (requiere autenticación).
-
-#### POST `/api/users`
-Crea un nuevo usuario (solo administradores).
-
-#### PUT `/api/users/:id`
-Actualiza un usuario (admin o propio usuario).
-
-#### DELETE `/api/users/:id`
-Elimina un usuario (solo administradores).
+- **GET** `/` - Obtiene todos los usuarios (requiere autenticación)
+- **GET** `/:id` - Obtiene un usuario específico por ID (requiere autenticación)
+- **POST** `/` - Crea un nuevo usuario (solo administradores)
+- **PUT** `/:id` - Actualiza un usuario (admin o propio usuario)
+- **DELETE** `/:id` - Elimina un usuario (solo administradores)
 
 ## Estructura del Proyecto
 

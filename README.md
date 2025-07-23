@@ -1,176 +1,203 @@
-# BackEnd II - Entrega N° 1
+# BackEnd II - Complete JWT Authentication System
 
-## Sistema Completo de Autenticación y Autorización con JWT
+A comprehensive backend system with JWT authentication, user management, product catalog, shopping cart, and email notifications.
 
-### Descripción
-Implementación completa de un sistema de autenticación y autorización con JWT (JSON Web Tokens) que incluye un CRUD completo de usuarios, implementado con Express.js, MongoDB (Mongoose), Passport.js y bcrypt para el hash de contraseñas.
+## Features
 
-## Características Implementadas
+- 🔐 **JWT Authentication** - Secure login/logout with JWT tokens
+- 👥 **User Management** - Complete CRUD operations for users
+- 📧 **Email Notifications** - Welcome emails and password reset functionality
+- 🛒 **Shopping Cart** - Product management and cart operations
+- 📦 **Product Catalog** - Product CRUD operations
+- 🎫 **Ticket System** - Purchase tickets and order management
+- 🎨 **Modern UI** - Handlebars templates with Bootstrap
+- 🔒 **Role-based Access** - User, Admin, Premium roles
+- 📱 **Responsive Design** - Mobile-friendly interface
 
-### ✅ 1. Modelo de Usuario
-- **first_name**: String (requerido)
-- **last_name**: String (requerido)
-- **email**: String (único, requerido)
-- **age**: Number (requerido)
-- **password**: String (hash con bcrypt)
-- **cart**: ObjectId (referencia a Carts)
-- **role**: String (valor por defecto: 'user')
+## Environment Variables
 
-### ✅ 2. Encriptación de Contraseñas
-- Utiliza `bcrypt.hashSync()` para encriptar contraseñas
-- Métodos `createHash()` y `validatePassword()` implementados en `utils.js`
-- Salt rounds: 10 para máxima seguridad
+Create a `.env` file in the root directory with the following variables:
 
-### ✅ 3. Estrategias de Passport
-- **JWT Strategy**: Para autenticación con tokens
-- **Local Strategy**: Para login y registro
-- Configuración completa en `passport.config.js`
+```env
+# Server Configuration
+PORT=8080
+NODE_ENV=development
 
-### ✅ 4. Sistema de Login/Register
-- Endpoints para registro y login de usuarios
-- Generación automática de JWT tokens
-- Almacenamiento seguro en cookies httpOnly
+# Database Configuration
+MONGO_URI=mongodb://127.0.0.1:27017/backend_ii_complete
 
-### ✅ 5. Ruta de Validación
-- Endpoint `/api/sessions/current` para validar usuario logueado
-- Extracción y validación de datos del JWT
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 
-### ✅ 6. CRUD de Usuarios
-- **GET** `/api/users` - Obtener todos los usuarios
-- **GET** `/api/users/:id` - Obtener usuario por ID
-- **POST** `/api/users` - Crear usuario (solo admin)
-- **PUT** `/api/users/:id` - Actualizar usuario
-- **DELETE** `/api/users/:id` - Eliminar usuario (solo admin)
+# Email Configuration (Gmail)
+MAIL_HOST=smtp.gmail.com
+MAIL_USER=your-email@gmail.com
+MAIL_PASS=your-app-password
+MAIL_FROM=your-email@gmail.com
 
-## Instalación
-
-1. **Clonar el repositorio**
-```bash
-git clone https://github.com/alavandero/Backend-II.git
-cd Backend-II
+# Frontend URL
+FRONTEND_URL=http://localhost:3000
 ```
 
-2. **Instalar dependencias**
-```bash
-npm install
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file with your configuration
+4. Start MongoDB
+5. Run the application:
+   ```bash
+   # Development mode
+   npm run dev
+   
+   # Production mode
+   npm start
+   ```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/sessions/register` - Register a new user
+- `POST /api/sessions/login` - Login user
+- `GET /api/sessions/current` - Get current user info
+- `POST /api/sessions/logout` - Logout user
+- `POST /api/sessions/forgot-password` - Request password reset
+- `POST /api/sessions/reset-password` - Reset password
+
+### Users
+- `GET /api/users` - Get all users (Admin only)
+- `GET /api/users/:id` - Get user by ID
+- `GET /api/users/num/:num` - Get user by number
+- `GET /api/users/email/:email` - Check if email exists
+- `POST /api/users` - Create user
+- `PUT /api/users/:id` - Update user by ID
+- `PUT /api/users/num/:num` - Update user by number
+- `DELETE /api/users/:id` - Delete user by ID
+- `DELETE /api/users/num/:num` - Delete user by number
+- `PUT /api/users/:id/password` - Change password
+
+### Products
+- `GET /api/products` - Get all products
+- `GET /api/products/:id` - Get product by ID
+- `POST /api/products` - Create product (Admin only)
+- `PUT /api/products/:id` - Update product (Admin only)
+- `DELETE /api/products/:id` - Delete product (Admin only)
+
+### Carts
+- `GET /api/carts` - Get all carts (Admin only)
+- `GET /api/carts/:id` - Get cart by ID
+- `POST /api/carts` - Create cart
+- `POST /api/carts/:id/products` - Add product to cart
+- `PUT /api/carts/:id/products/:productId` - Update product quantity
+- `DELETE /api/carts/:id/products/:productId` - Remove product from cart
+- `DELETE /api/carts/:id` - Clear cart
+- `POST /api/carts/:id/purchase` - Purchase cart
+
+### Tickets
+- `GET /api/tickets` - Get all tickets
+- `GET /api/tickets/:id` - Get ticket by ID
+- `POST /api/tickets` - Create ticket
+
+## Frontend Views
+
+- `/` - Home page
+- `/login` - Login form
+- `/register` - Registration form
+- `/forgot-password` - Password reset request
+- `/reset-password` - Password reset form
+- `/profile` - User profile (protected)
+- `/products` - Product catalog (protected)
+- `/cart` - Shopping cart (protected)
+
+## Project Structure
+
+```
+src/
+├── config/
+│   ├── index.js              # Environment configuration
+│   └── passport.config.js    # Passport JWT strategy
+├── controllers/
+│   ├── user.controller.js    # User operations
+│   ├── sessions.controller.js # Authentication
+│   ├── product.controller.js # Product operations
+│   ├── cart.controller.js    # Cart operations
+│   └── ticket.controller.js  # Ticket operations
+├── models/
+│   ├── user.model.js         # User schema
+│   ├── product.model.js      # Product schema
+│   ├── cart.model.js         # Cart schema
+│   └── ticket.model.js       # Ticket schema
+├── repositories/
+│   ├── user.repository.js    # User data access
+│   ├── product.repository.js # Product data access
+│   ├── cart.repository.js    # Cart data access
+│   └── ticket.repository.js  # Ticket data access
+├── services/
+│   ├── user.service.js       # User business logic
+│   ├── sessions.service.js   # Authentication logic
+│   ├── product.service.js    # Product business logic
+│   ├── cart.service.js       # Cart business logic
+│   └── ticket.service.js     # Ticket business logic
+├── routes/
+│   ├── users.router.js       # User routes
+│   ├── sessions.router.js    # Authentication routes
+│   ├── products.router.js    # Product routes
+│   ├── carts.router.js       # Cart routes
+│   ├── tickets.router.js     # Ticket routes
+│   └── views.router.js       # Frontend routes
+├── middlewares/
+│   └── auth.middleware.js    # JWT authentication middleware
+├── utils/
+│   ├── hash.js               # Password hashing utilities
+│   ├── getNextNumber.js      # Sequential number generation
+│   └── mailer.js             # Email utilities
+├── DTO/
+│   └── user.DTO.js           # User data transfer object
+├── views/
+│   ├── layouts/
+│   │   └── main.handlebars   # Main layout template
+│   ├── index.handlebars      # Home page
+│   ├── login.handlebars      # Login form
+│   ├── register.handlebars   # Registration form
+│   └── profile.handlebars    # User profile
+└── server.js                 # Main application file
 ```
 
-3. **Configurar MongoDB**
-- Asegúrate de tener MongoDB corriendo localmente en el puerto 27017
-- La base de datos se creará automáticamente: `backend_ii_complete`
+## Technologies Used
 
-4. **Ejecutar el servidor**
-```bash
-npm start
-# o
-npm run dev
-```
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM for MongoDB
+- **JWT** - JSON Web Tokens for authentication
+- **Passport.js** - Authentication middleware
+- **bcrypt** - Password hashing
+- **nodemailer** - Email sending
+- **Handlebars** - Template engine
+- **Bootstrap** - CSS framework
+- **CORS** - Cross-origin resource sharing
 
-El servidor estará disponible en `http://localhost:8080`
+## Security Features
 
-## Endpoints de la API
+- Password hashing with bcrypt
+- JWT token authentication
+- Role-based access control
+- Input validation and sanitization
+- Secure cookie settings
+- CORS protection
+- Environment variable configuration
 
-### Sesiones (`/api/sessions`)
-- **POST** `/register` - Registra un nuevo usuario
-- **POST** `/login` - Inicia sesión con un usuario existente
-- **GET** `/current` - Obtiene los datos del usuario actualmente autenticado
-- **POST** `/logout` - Cierra la sesión del usuario
+## Contributing
 
-### Usuarios (`/api/users`)
-- **GET** `/` - Obtiene todos los usuarios (requiere autenticación)
-- **GET** `/:id` - Obtiene un usuario específico por ID (requiere autenticación)
-- **POST** `/` - Crea un nuevo usuario (solo administradores)
-- **PUT** `/:id` - Actualiza un usuario (admin o propio usuario)
-- **DELETE** `/:id` - Elimina un usuario (solo administradores)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## Estructura del Proyecto
+## License
 
-```
-BackEnd II/
-├── package.json              # Dependencias del proyecto
-├── README.md                 # Documentación
-├── .gitignore               # Git ignore file
-└── src/
-    ├── server.js             # Servidor principal
-    ├── utils.js              # Utilidades (bcrypt, JWT)
-    ├── config/
-    │   └── passport.config.js # Configuración de Passport
-    ├── models/
-    │   └── user.model.js     # Modelo de Usuario
-    └── routes/
-        ├── sessions.router.js # Rutas de autenticación
-        └── users.router.js    # Rutas CRUD de usuarios
-```
-
-## Seguridad
-
-- **Contraseñas**: Encriptadas con bcrypt (salt rounds: 10)
-- **JWT**: Tokens firmados con clave privada
-- **Cookies**: httpOnly para prevenir XSS
-- **Validación**: Campos requeridos y únicos
-- **Autorización**: Control de roles (user/admin)
-
-## Ejemplos de Uso
-
-### 1. Registrar un usuario
-```bash
-curl -X POST http://localhost:8080/api/sessions/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john@example.com",
-    "age": 25,
-    "password": "password123"
-  }'
-```
-
-### 2. Iniciar sesión
-```bash
-curl -X POST http://localhost:8080/api/sessions/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "password123"
-  }' \
-  -c cookies.txt
-```
-
-### 3. Obtener usuario actual
-```bash
-curl -X GET http://localhost:8080/api/sessions/current \
-  -b cookies.txt
-```
-
-### 4. Obtener todos los usuarios
-```bash
-curl -X GET http://localhost:8080/api/users \
-  -b cookies.txt
-```
-
-## Tecnologías Utilizadas
-
-- **Node.js** - Runtime de JavaScript
-- **Express.js** - Framework web
-- **MongoDB** - Base de datos NoSQL
-- **Mongoose** - ODM para MongoDB
-- **Passport.js** - Middleware de autenticación
-- **JWT** - JSON Web Tokens
-- **bcrypt** - Encriptación de contraseñas
-- **cookie-parser** - Parseo de cookies
-
-## Criterios de Evaluación Cumplidos
-
-✅ **Modelo de Usuario y Encriptación**: Modelo completo con todos los campos requeridos y encriptación con bcrypt
-
-✅ **Estrategias de Passport**: JWT y Local strategies configuradas correctamente
-
-✅ **Sistema de Login y JWT**: Login funcional con generación de tokens JWT
-
-✅ **Endpoint Current**: `/api/sessions/current` implementado y funcional
-
-✅ **Validación de Usuario**: Extracción precisa de datos del JWT y manejo de errores
-
-✅ **CRUD de Usuarios**: Operaciones completas de Create, Read, Update, Delete
-
-✅ **Autorización**: Control de acceso basado en roles (user/admin) 
+This project is licensed under the ISC License. 

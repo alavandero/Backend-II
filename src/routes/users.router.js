@@ -1,136 +1,26 @@
 import { Router } from "express";
-import userModel from "../models/user.model.js";
-import { createHash } from "../utils.js";
-import passport from "passport";
+import UserController from "../controllers/user.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
+const userController = new UserController();
 
-// Get all users (protected route)
-router.get("/", 
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const users = await userModel.find({}, { password: 0 });
-      res.json({ users });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
+// Public routes
+router.post("/", userController.saveUser.bind(userController));
 
-// Get user by ID (protected route)
-router.get("/:id", 
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const user = await userModel.findById(req.params.id, { password: 0 });
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-      res.json({ user });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
+// Protected routes
+router.get("/", authMiddleware, userController.getUsers.bind(userController));
+router.get("/:id", authMiddleware, userController.getUserById.bind(userController));
+router.get("/num/:num", authMiddleware, userController.getUserByNum.bind(userController));
+router.get("/email/:email", authMiddleware, userController.getUserByEmail.bind(userController));
 
-// Create user (admin only)
-router.post("/", 
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      // Check if user is admin
-      if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: "Access denied. Admin role required." });
-      }
+router.put("/:id", authMiddleware, userController.updateUserByID.bind(userController));
+router.put("/num/:num", authMiddleware, userController.updateUserByNum.bind(userController));
 
-      const { first_name, last_name, email, age, password, role } = req.body;
-      
-      // Check if user already exists
-      const existingUser = await userModel.findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({ error: "User already exists" });
-      }
+router.delete("/:id", authMiddleware, userController.deleteUserByID.bind(userController));
+router.delete("/num/:num", authMiddleware, userController.deleteUserByNum.bind(userController));
 
-      // Hash password
-      const hashedPassword = createHash(password);
-
-      const newUser = await userModel.create({
-        first_name,
-        last_name,
-        email,
-        age,
-        password: hashedPassword,
-        role: role || 'user'
-      });
-
-      const userResponse = newUser.toObject();
-      delete userResponse.password;
-
-      res.status(201).json({ user: userResponse });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
-
-// Update user (admin or own user)
-router.put("/:id", 
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { first_name, last_name, email, age, role } = req.body;
-
-      // Check if user can update this profile
-      if (req.user.role !== 'admin' && req.user._id.toString() !== id) {
-        return res.status(403).json({ error: "Access denied" });
-      }
-
-      const updateData = {};
-      if (first_name) updateData.first_name = first_name;
-      if (last_name) updateData.last_name = last_name;
-      if (email) updateData.email = email;
-      if (age) updateData.age = age;
-      if (role && req.user.role === 'admin') updateData.role = role;
-
-      const updatedUser = await userModel.findByIdAndUpdate(
-        id,
-        updateData,
-        { new: true, runValidators: true }
-      ).select('-password');
-
-      if (!updatedUser) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      res.json({ user: updatedUser });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
-
-// Delete user (admin only)
-router.delete("/:id", 
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      // Check if user is admin
-      if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: "Access denied. Admin role required." });
-      }
-
-      const deletedUser = await userModel.findByIdAndDelete(req.params.id);
-      if (!deletedUser) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      res.json({ message: "User deleted successfully" });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
+// Password change
+router.put("/:id/password", authMiddleware, userController.changePassword.bind(userController));
 
 export default router; 

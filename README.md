@@ -10,7 +10,6 @@ A comprehensive backend system with JWT authentication, user management, product
 - 🛒 **Shopping Cart** - Product management and cart operations
 - 📦 **Product Catalog** - Product CRUD operations
 - 🎫 **Ticket System** - Purchase tickets and order management
-- 🎨 **Modern UI** - Handlebars templates with Bootstrap
 - 🔒 **Role-based Access** - User, Admin, Premium roles
 - 📱 **Responsive Design** - Mobile-friendly interface
 
@@ -133,11 +132,6 @@ src/
 │   └── user.DTO.js           # User data transfer object
 ├── views/
 │   ├── layouts/
-│   │   └── main.handlebars   # Main layout template
-│   ├── index.handlebars      # Home page
-│   ├── login.handlebars      # Login form
-│   ├── register.handlebars   # Registration form
-│   └── profile.handlebars    # User profile
 └── server.js                 # Main application file
 ```
 
@@ -151,7 +145,6 @@ src/
 - **Passport.js** - Authentication middleware
 - **bcrypt** - Password hashing
 - **nodemailer** - Email sending
-- **Bootstrap** - CSS framework
 - **CORS** - Cross-origin resource sharing
 
 ## Security Features

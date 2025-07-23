@@ -14,31 +14,6 @@ A comprehensive backend system with JWT authentication, user management, product
 - 🔒 **Role-based Access** - User, Admin, Premium roles
 - 📱 **Responsive Design** - Mobile-friendly interface
 
-## Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
-
-```env
-# Server Configuration
-PORT=8080
-NODE_ENV=development
-
-# Database Configuration
-MONGO_URI=mongodb://127.0.0.1:27017/backend_ii_complete
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-
-# Email Configuration (Gmail)
-MAIL_HOST=smtp.gmail.com
-MAIL_USER=your-email@gmail.com
-MAIL_PASS=your-app-password
-MAIL_FROM=your-email@gmail.com
-
-# Frontend URL
-FRONTEND_URL=http://localhost:3000
-```
-
 ## Installation
 
 1. Clone the repository
@@ -176,7 +151,6 @@ src/
 - **Passport.js** - Authentication middleware
 - **bcrypt** - Password hashing
 - **nodemailer** - Email sending
-- **Handlebars** - Template engine
 - **Bootstrap** - CSS framework
 - **CORS** - Cross-origin resource sharing
 
